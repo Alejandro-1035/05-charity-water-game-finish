@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>charity: water - Water Drop Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-wrapper">
+        <header class="header">
+            <div class="logo-container">
+                <img src="img/cw_logo-horizontal.png" alt="charity: water logo" class="logo">
+            </div>
+            <h1 class="game-title">Water Drop Game</h1>
+            <p class="tagline">Help bring clean water to people in need</p>
+        </header>
+        
+        <div class="game-stats">
+            <div class="stat-item">
+                <span class="stat-label">Score</span>
+                <span id="score" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Time</span>
+                <span id="timer" class="stat-value">30</span>
+            </div>
+        </div>
+        
+        <div id="game-container" class="game-container">
+            <div id="difficulty-selection" class="difficulty-selection">
+                <h2>Choose Your Difficulty</h2>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn easy" data-difficulty="easy">
+                        <span class="difficulty-name">Easy</span>
+                        <span class="difficulty-desc">Fewer drops, less pollution</span>
+                    </button>
+                    <button class="difficulty-btn medium" data-difficulty="medium">
+                        <span class="difficulty-name">Medium</span>
+                        <span class="difficulty-desc">Balanced challenge</span>
+                    </button>
+                    <button class="difficulty-btn hard" data-difficulty="hard">
+                        <span class="difficulty-name">Hard</span>
+                        <span class="difficulty-desc">Fast drops, more pollution</span>
+                    </button>
+                </div>
+                
+                <div class="time-selector">
+                    <h3>Game Duration</h3>
+                    <div class="time-slider-container">
+                        <label for="time-slider" class="time-label">30 seconds</label>
+                        <input type="range" id="time-slider" class="time-slider" 
+                               min="30" max="180" value="30" step="15">
+                        <div class="time-marks">
+                            <span>30s</span>
+                            <span>1m</span>
+                            <span>1.5m</span>
+                            <span>2m</span>
+                            <span>2.5m</span>
+                            <span>3m</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="back-btn" class="back-button hidden">← Change Difficulty</button>
+            </div>
+            <button id="start-btn" class="start-button hidden">Start Game</button>
+            <button id="play-again-btn" class="play-again-button hidden">Play Again!</button>
+            <div id="game-message" class="game-message hidden"></div>
+        </div>
+        
+        <div class="game-info">
+            <p>Click the clean water drops to collect them!</p>
+            <p>Avoid the dark polluted drops - they subtract points!</p>
+            <p>Get 20 points to win!</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
