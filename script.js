@@ -60,6 +60,9 @@ class WaterDropGame {
             "Nice try! Together we can bring clean water to all! 🤝"
         ];
         
+
+        this.initializeAudio();
+        
         this.initializeGame();
     }
     
@@ -102,11 +105,48 @@ class WaterDropGame {
         });
     }
     
+    initializeAudio() {
+        try {
+            this.dropSoundClean = new Audio('Sound/game-bonus-02-294436.mp3');
+            this.dropSoundPolluted = new Audio('Sound/pollutedwater.mp3');
+            
+            this.dropSoundClean.preload = 'auto';
+            this.dropSoundPolluted.preload = 'auto';
+            this.dropSoundClean.volume = 0.3;
+            this.dropSoundPolluted.volume = 0.2;
+            
+            console.log('Audio initialized successfully');
+        } catch (error) {
+            console.log('Audio initialization failed, sound effects disabled');
+            this.dropSoundClean = null;
+            this.dropSoundPolluted = null;
+        }
+    }
+    
+    playDropSound(isPolluted = false) {
+        try {
+            const soundToPlay = isPolluted ? this.dropSoundPolluted : this.dropSoundClean;
+            
+            if (soundToPlay) {
+                soundToPlay.currentTime = 0;
+                
+                const playPromise = soundToPlay.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Audio play failed:', error);
+                    });
+                }
+            }
+        } catch (error) {
+            console.log('Error playing sound:', error);
+        }
+    }
+    
     updateTimeSelection(seconds) {
         this.gameDuration = seconds;
         this.timeLeft = seconds;
         
-        // Update the label
         if (seconds < 60) {
             this.timeLabel.textContent = `${seconds} seconds`;
         } else {
@@ -128,17 +168,14 @@ class WaterDropGame {
         
         this.resetGameState();
         
-        // Update game parameters
         this.dropSpawnRate = settings.dropSpawnRate;
         this.pollutedDropChance = settings.pollutedDropChance;
         this.dropSpeed = settings.dropSpeed;
         this.speedIncrease = settings.speedIncrease;
         
-        // Set time from slider
         this.gameDuration = parseInt(this.timeSlider.value);
         this.timeLeft = this.gameDuration;
         
-        // Hide difficulty selection and show start button
         this.difficultySelection.style.display = 'none';
         this.startBtn.classList.remove('hidden');
         this.startBtn.style.display = 'block';
@@ -201,6 +238,7 @@ class WaterDropGame {
     }
     
     startGame() {
+        
         this.gameActive = true;
         this.score = 0;
         this.timeLeft = this.gameDuration;
@@ -294,9 +332,11 @@ class WaterDropGame {
             if (isPolluted) {
                 this.score = Math.max(0, this.score - 2);
                 drop.classList.add('clicked-polluted');
+                this.playDropSound(true);
             } else {
                 this.score++;
                 drop.classList.add('clicked');
+                this.playDropSound(false);
             }
             
             this.updateScore();
@@ -473,7 +513,7 @@ class WaterDropGame {
         
         const settings = this.difficultySettings[this.selectedDifficulty];
         this.startBtn.classList.remove('hidden');
-        this.startBtn.style.display = 'block'; // Ensure display is set
+        this.startBtn.style.display = 'block'; 
         this.startBtn.textContent = `Start ${settings.name} Game`;
         
         this.playAgainBtn.classList.add('hidden');
