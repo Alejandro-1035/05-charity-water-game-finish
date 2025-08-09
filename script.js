@@ -36,14 +36,12 @@ class WaterDropGame {
                 name: 'Hard'
             }
         };
-        
-        // Current game settings (will be set based on difficulty)
+
         this.dropSpeed = 1.3;
         this.dropSpawnRate = 600;
         this.pollutedDropChance = 0.25;
         this.speedIncrease = 0.2;
         
-        // Arrays of win/lose messages
         this.winMessages = [
             "Amazing! You're helping bring clean water to communities! 🌊",
             "Fantastic work! Your score makes a real difference! 💧",
@@ -77,7 +75,6 @@ class WaterDropGame {
         this.timeSlider = document.getElementById('time-slider');
         this.timeLabel = document.querySelector('.time-label');
         
-        // Add difficulty selection event listeners
         const difficultyButtons = document.querySelectorAll('.difficulty-btn');
         difficultyButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -85,7 +82,6 @@ class WaterDropGame {
             });
         });
         
-        // Add time slider event listener
         this.timeSlider.addEventListener('input', (e) => {
             this.updateTimeSelection(parseInt(e.target.value));
         });
@@ -94,7 +90,6 @@ class WaterDropGame {
         this.backBtn.addEventListener('click', () => this.showDifficultySelection());
         this.playAgainBtn.addEventListener('click', () => this.playAgain());
         
-        // Add keyboard support
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && !this.gameActive && this.selectedDifficulty) {
                 e.preventDefault();
@@ -124,7 +119,6 @@ class WaterDropGame {
             }
         }
         
-        // Update timer display
         this.updateTimer();
     }
     
@@ -132,7 +126,6 @@ class WaterDropGame {
         this.selectedDifficulty = difficulty;
         const settings = this.difficultySettings[difficulty];
         
-        // Reset game state
         this.resetGameState();
         
         // Update game parameters
@@ -152,26 +145,21 @@ class WaterDropGame {
         this.startBtn.textContent = `Start ${settings.name} Game`;
         this.backBtn.classList.remove('hidden');
         
-        // Update game info based on difficulty
         this.updateGameInfo(difficulty);
     }
     
     resetGameState() {
-        // Clear all intervals
         if (this.gameInterval) clearInterval(this.gameInterval);
         if (this.timerInterval) clearInterval(this.timerInterval);
         if (this.speedUpInterval) clearInterval(this.speedUpInterval);
         
-        // Reset game variables
         this.gameActive = false;
         this.gameEnded = false;
         this.score = 0;
         this.timeLeft = this.gameDuration;
-        
-        // Clear all drops
+
         this.clearAllDrops();
         
-        // Hide messages and buttons
         this.gameMessage.classList.add('hidden');
         this.playAgainBtn.classList.add('hidden');
         if (this.resetBtn) {
@@ -179,7 +167,6 @@ class WaterDropGame {
             this.resetBtn.style.display = 'none';
         }
         
-        // Update displays
         this.updateScore();
         this.updateTimer();
     }
@@ -225,10 +212,8 @@ class WaterDropGame {
         this.backBtn.classList.add('hidden');
         this.gameMessage.classList.add('hidden');
         
-        // Clear any existing drops
         this.clearAllDrops();
         
-        // Start timer countdown
         this.timerInterval = setInterval(() => {
             this.timeLeft--;
             this.updateTimer();
@@ -238,12 +223,10 @@ class WaterDropGame {
             }
         }, 1000);
         
-        // Start spawning water drops
         this.gameInterval = setInterval(() => {
             this.createWaterDrop();
         }, this.dropSpawnRate);
         
-        // Speed up drop spawning as game progresses (based on difficulty)
         this.speedUpInterval = setInterval(() => {
             if (this.dropSpawnRate > 300) {
                 this.dropSpawnRate -= (20 * this.speedIncrease);
@@ -260,7 +243,6 @@ class WaterDropGame {
         
         const drop = document.createElement('div');
         
-        // Determine if this is a polluted drop
         const isPolluted = Math.random() < this.pollutedDropChance;
         drop.classList.add('water-drop');
         
@@ -270,8 +252,7 @@ class WaterDropGame {
         } else {
             drop.setAttribute('data-type', 'clean');
         }
-        
-        // Larger sizes for easier clicking (40-80px on desktop, 50-90px on mobile)
+
         const isMobile = window.innerWidth <= 768;
         const minSize = isMobile ? 50 : 40;
         const maxSize = isMobile ? 90 : 80;
@@ -279,70 +260,56 @@ class WaterDropGame {
         drop.style.width = `${size}px`;
         drop.style.height = `${size}px`;
         
-        // Random horizontal position
         const containerWidth = this.gameContainer.offsetWidth;
         const maxLeft = containerWidth - size;
         drop.style.left = `${Math.random() * maxLeft}px`;
         drop.style.top = '-60px';
         
-        // Track if drop is being removed to prevent multiple clicks
         let isRemoving = false;
         let animationId = null;
         
-        // Store the original fall speed to prevent speed changes
         const fallSpeed = this.dropSpeed + Math.random() * 0.3;
         
-        // Add multiple event listeners for better responsiveness
         const handleClick = (e) => {
             if (!this.gameActive || this.gameEnded || isRemoving) return;
             
             e.preventDefault();
             e.stopPropagation();
             
-            // Prevent multiple clicks on same drop
             if (drop.classList.contains('clicked') || drop.classList.contains('clicked-polluted')) {
                 return;
             }
             
-            // Mark as being removed
             isRemoving = true;
             
-            // Immediately stop fall animation
             if (animationId) {
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
             
-            // Stop the drop from falling immediately and lock its position
             drop.style.pointerEvents = 'none';
             const currentTop = drop.style.top;
-            drop.style.top = currentTop; // Lock current position
+            drop.style.top = currentTop; 
             
             if (isPolluted) {
-                // Polluted drop - subtract points
                 this.score = Math.max(0, this.score - 2);
                 drop.classList.add('clicked-polluted');
             } else {
-                // Clean drop - add points
                 this.score++;
                 drop.classList.add('clicked');
             }
             
             this.updateScore();
             
-            // Remove drop after animation completes
             setTimeout(() => {
                 if (drop.parentNode) {
                     drop.remove();
                 }
             }, 400);
         };
-        
-        // Add both click and touch events
         drop.addEventListener('click', handleClick, { once: true });
         drop.addEventListener('touchstart', handleClick, { once: true, passive: false });
         
-        // Prevent context menu on long press
         drop.addEventListener('contextmenu', (e) => e.preventDefault());
         
         this.gameContainer.appendChild(drop);
@@ -353,13 +320,11 @@ class WaterDropGame {
         let animationId;
         
         const animate = () => {
-            // Check if drop is being removed
             if (!this.gameActive || !drop.parentNode || isRemovingCheck()) {
                 if (animationId) cancelAnimationFrame(animationId);
                 return;
             }
             
-            // Stop animation if drop has click classes (double check)
             if (drop.classList.contains('clicked') || drop.classList.contains('clicked-polluted')) {
                 if (animationId) cancelAnimationFrame(animationId);
                 return;
@@ -399,19 +364,15 @@ class WaterDropGame {
     endGame() {
         this.gameActive = false;
         this.gameEnded = true;
-        
-        // Clear all intervals
+
         clearInterval(this.gameInterval);
         clearInterval(this.timerInterval);
         clearInterval(this.speedUpInterval);
         
-        // Remove all remaining drops
         this.clearAllDrops();
         
-        // Show end game message
         this.showEndGameMessage();
-        
-        // Show play again and back buttons after delay
+
         setTimeout(() => {
             this.playAgainBtn.classList.remove('hidden');
             this.backBtn.classList.remove('hidden');
@@ -432,14 +393,17 @@ class WaterDropGame {
         this.gameMessage.className = `game-message ${isWinner ? 'winning' : 'losing'}`;
         this.gameMessage.classList.remove('hidden');
         
-        // Show reset button after showing the message
+
+        setTimeout(() => {
+            this.showDonationSection();
+        }, 1500);
+
         setTimeout(() => {
             this.showResetButton();
         }, 1000);
     }
     
     showResetButton() {
-        // Create reset button if it doesn't exist
         if (!this.resetBtn) {
             this.resetBtn = document.createElement('button');
             this.resetBtn.id = 'reset-btn';
@@ -447,7 +411,6 @@ class WaterDropGame {
             this.resetBtn.textContent = 'Reset Game';
             this.resetBtn.addEventListener('click', () => this.resetGame());
             
-            // Position the button below the game message
             this.resetBtn.style.position = 'absolute';
             this.resetBtn.style.top = '70%';
             this.resetBtn.style.left = '50%';
@@ -456,16 +419,31 @@ class WaterDropGame {
             this.gameContainer.appendChild(this.resetBtn);
         }
         
-        // Show the reset button
         this.resetBtn.classList.remove('hidden');
         this.resetBtn.style.display = 'block';
     }
     
+    showDonationSection() {
+        const donationSection = document.getElementById('donation-section');
+        if (donationSection) {
+            donationSection.classList.remove('hidden');
+            donationSection.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+    }
+    
+    hideDonationSection() {
+        const donationSection = document.getElementById('donation-section');
+        if (donationSection) {
+            donationSection.classList.add('hidden');
+        }
+    }
+    
     resetGame() {
-        // Reset everything completely
         this.resetGameState();
         
-        // Hide all buttons
         this.startBtn.classList.add('hidden');
         this.startBtn.style.display = 'none';
         this.playAgainBtn.classList.add('hidden');
@@ -475,11 +453,11 @@ class WaterDropGame {
             this.resetBtn.style.display = 'none';
         }
         
-        // Show difficulty selection
+        this.hideDonationSection();
+        
         this.difficultySelection.style.display = 'block';
         this.selectedDifficulty = null;
         
-        // Reset game info
         const gameInfo = document.querySelector('.game-info');
         gameInfo.innerHTML = `
             <p>Click the clean water drops to collect them!</p>
@@ -489,22 +467,20 @@ class WaterDropGame {
     }
     
     playAgain() {
-        // Reset game state but keep the same difficulty
         this.resetGameState();
         
-        // Show start button with current difficulty
+        this.hideDonationSection();
+        
         const settings = this.difficultySettings[this.selectedDifficulty];
         this.startBtn.classList.remove('hidden');
         this.startBtn.style.display = 'block'; // Ensure display is set
         this.startBtn.textContent = `Start ${settings.name} Game`;
         
-        // Hide play again button
         this.playAgainBtn.classList.add('hidden');
         this.backBtn.classList.remove('hidden');
     }
 }
 
-// Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new WaterDropGame();
 });

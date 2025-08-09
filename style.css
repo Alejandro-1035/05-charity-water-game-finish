@@ -671,3 +671,121 @@ body {
         font-size: 0.75rem;
     }
 }
+
+/* Donation Section */
+.donation-section {
+    margin-top: 50px;
+    padding: 40px 30px;
+    background: linear-gradient(135deg, var(--cw-blue) 0%, var(--cw-dark-blue) 100%);
+    border-radius: 16px;
+    color: var(--cw-white);
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 160, 230, 0.3);
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease-in-out;
+}
+
+.donation-section.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.donation-section h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--cw-white);
+}
+
+.donation-section p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.donation-button {
+    display: inline-block;
+    background: var(--cw-yellow);
+    color: var(--cw-dark-gray);
+    padding: 18px 35px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(255, 225, 53, 0.4);
+}
+
+.donation-button:hover {
+    background: #F5D60A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 225, 53, 0.6);
+}
+
+.impact-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 30px;
+}
+
+.impact-item {
+    text-align: center;
+}
+
+.impact-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cw-yellow);
+    margin-bottom: 8px;
+}
+
+.impact-text {
+    display: block;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Responsive design for donation section */
+@media (max-width: 768px) {
+    .donation-section {
+        margin-top: 30px;
+        padding: 30px 20px;
+    }
+    
+    .donation-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .donation-section p {
+        font-size: 1rem;
+    }
+    
+    .donation-button {
+        padding: 15px 25px;
+        font-size: 1.1rem;
+    }
+    
+    .impact-stats {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .impact-number {
+        font-size: 1.6rem;
+    }
+    
+    .impact-text {
+        font-size: 0.9rem;
+    }
+}
